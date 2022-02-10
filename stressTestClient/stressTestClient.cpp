@@ -6,14 +6,10 @@ using namespace std;
 #include <string.h>
 #include "stdlib.h"
 #include "stdio.h"
-#include <unordered_set>
-#include <vector>
-#include <string>
-#include <chrono>
-#include <algorithm>
 #include <sys/types.h>
 #include <unistd.h>
 #include <assert.h>
+#include <chrono>
 // Constants
 
 // Enable per-request timing
@@ -26,11 +22,8 @@ int numOps = 100000;
 int payloadSize = 128;
 char sendBuff[2048];
 char recvBuff[2048];
-int usePMSwitch = 1;
 int port_no = 0;
 uint32_t* timeArray;
-unordered_set <string> usedkeys_set;
-vector <string> usedkeys_vec;
 int dumpTiming = 0;
 
 
