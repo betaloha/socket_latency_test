@@ -15,7 +15,7 @@ using namespace std;
 // Enable per-request timing
 //#define TIMING
 
-#define REMOTE_ADDRESS "192.168.1.2"
+#define REMOTE_ADDRESS "192.168.1.1"
 
 int downStreamUDPSock = 0;
 int numOps = 100000;
@@ -35,23 +35,18 @@ void initializePayload(){
     }
 }
 
-int seqnoToKey(int seqno){
-    return seqno;
-}
-
 int runTest(){
     int ctr = 0;
     int numWrite = 0;
     auto start_time = chrono::high_resolution_clock::now();
     auto lastReqEnd_time = start_time;
     auto thisReqEnd_time = start_time;
-    struct pmswitchHeader* hds = (struct pmswitchHeader*)sendBuff;
     while(ctr<numOps){
         int ret;
         ret = socketHandler_send_bytes(downStreamUDPSock, sendBuff, payloadSize);
         assert(ret==payloadSize && "Send error");
-        ret = socketHandler_recv_bytes(downStreamUDPSock, recvBuff, sizeof(recvBuff)); 
-        assert(ret && "Recv error");
+        ret = socketHandler_recv_bytes(downStreamUDPSock, recvBuff, sizeof(recvBuff));
+	assert(ret && "Recv error");
         //Timing
 #ifdef TIMING
         thisReqEnd_time = chrono::high_resolution_clock::now();
@@ -66,10 +61,10 @@ int runTest(){
     
     auto end_time = chrono::high_resolution_clock::now();
 #ifndef TIMING
+    cerr << "Iterations: " << ctr << ", PayloadSize: " << payloadSize << ", " ;
     uint32_t totalTime = (uint32_t)chrono::duration_cast<chrono::microseconds>(end_time - start_time).count();
-    cout << "totalTime: " << totalTime << endl;
-    cout << "AvgTime: " << ((double)totalTime)/ctr << endl;
-    cerr << ctr << endl;
+    cerr << "TotalTime: " << totalTime << ", ";
+    cerr << "AvgTime: " << ((double)totalTime)/ctr << endl;
 #else
     // timeArray
     std::vector<uint32_t>timeVectorMicroFull(timeArray, &timeArray[ctr]);
@@ -79,8 +74,8 @@ int runTest(){
     for(int k=0;k<timeVectorMicro.size();k++){
         totalTimeMicro += timeVectorMicro[k];
     }
-    cout << "totalTime: " << totalTimeMicro << endl;
-    cout << "AvgTime: " << (double)totalTimeMicro/dataPtsCount << endl;
+    cerr << "totalTime: " << totalTimeMicro << endl;
+    cerr << "AvgTime: " << (double)totalTimeMicro/dataPtsCount << endl;
     // std::sort(timeVectorMicro.begin(), timeVectorMicro.end());
     // cout << "LowestTime " << timeVectorMicro[0] << ", Longest Time " << timeVectorMicro.back() << endl; 
     // cout << "P95: " << timeVectorMicro[timeVectorMicro.size()*95/100] << ", P99: " << timeVectorMicro[timeVectorMicro.size()*99/100] << endl;
@@ -145,6 +140,7 @@ int main(int argc, char* argv[]){
     // Initialize payload.
     initializePayload();
     downStreamUDPSock = socketHandler_connect(REMOTE_ADDRESS, port_no, DATAGRAM, BLOCKING);
+    assert(downStreamUDPSock);
     //cerr << "Initialized" << endl;
     runTest();
 
