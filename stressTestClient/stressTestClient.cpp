@@ -15,13 +15,13 @@ using namespace std;
 // Enable per-request timing
 //#define TIMING
 
-#define REMOTE_ADDRESS "127.0.0.1"
+#define REMOTE_ADDRESS "192.168.1.2"
 
 int downStreamUDPSock = 0;
 int numOps = 100000;
 int payloadSize = 128;
-char sendBuff[2048];
-char recvBuff[2048];
+char sendBuff[8192];
+char recvBuff[8192];
 int port_no = 0;
 uint32_t* timeArray;
 int dumpTiming = 0;
@@ -40,9 +40,6 @@ int seqnoToKey(int seqno){
 }
 
 int runTest(){
-    char appBuff[5000];
-    //char pmSwitchBuff[5000];
-    
     int ctr = 0;
     int numWrite = 0;
     auto start_time = chrono::high_resolution_clock::now();
