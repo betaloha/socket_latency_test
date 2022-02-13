@@ -1,3 +1,4 @@
+#include <string.h>
 #include <iostream>
 using namespace std;
 #include "../socketHandler/socketHandler.h"
@@ -20,8 +21,8 @@ int main(int argc, char* argv[]){
     // Temp implementation, do not use this, it's shitty.
     int serverSock = socketHandler_listen(serverPort, DATAGRAM, BLOCKING);
     int ret=0;
-    char recvBuff[2048];
-    char sendBuff[2048];
+    char recvBuff[8192];
+    char sendBuff[8192];
     int seqNumber = 0;
     while(1){
         struct sockaddr_in addressStruct;
@@ -36,6 +37,7 @@ int main(int argc, char* argv[]){
         recvSize = ret;
         int port = ntohs(addressStruct.sin_port);
         char src_ip[40];
+	memcpy(sendBuff, recvBuff, recvSize);
         inet_ntop(AF_INET, (void*)&addressStruct.sin_addr.s_addr, src_ip, sizeof(src_ip));
         socketHandler_send_bytes_to(serverSock, sendBuff, sendSize, (const char*)src_ip, port);
     }
