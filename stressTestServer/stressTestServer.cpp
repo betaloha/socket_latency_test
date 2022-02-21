@@ -37,10 +37,10 @@ int main(int argc, char* argv[]){
         recvSize = ret;
         int port = ntohs(addressStruct.sin_port);
         char src_ip[64];
-	memcpy(sendBuff, recvBuff, recvSize);
+	//memcpy(sendBuff, recvBuff, recvSize);
 	sendSize = recvSize;
         inet_ntop(AF_INET, (void*)&addressStruct.sin_addr.s_addr, src_ip, sizeof(src_ip));
-        ret = socketHandler_send_bytes_to(serverSock, sendBuff, sendSize, (const char*)src_ip, port);
+        ret = socketHandler_send_bytes_to(serverSock, recvBuff, sendSize, (const char*)src_ip, port);
 	assert(ret>0 && "Send Error");	
     }
 
