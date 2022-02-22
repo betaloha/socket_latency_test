@@ -1,3 +1,10 @@
+/*
+unoptimized old version
+
+Korakit Seemakhupt
+korakit@virginia.edu
+*/
+
 #include <iostream>
 #include <fstream>
 using namespace std;
