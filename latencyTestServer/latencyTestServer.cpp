@@ -17,8 +17,6 @@ int main(int argc, char* argv[]){
         serverPort = atoi(argv[1]);
     }
 
-    // UDP socket for PMSwitch downstream;
-    // Temp implementation, do not use this, it's shitty.
     int serverSock = socketHandler_listen(serverPort, DATAGRAM, BLOCKING);
     int ret=0;
     char recvBuff[8192];
